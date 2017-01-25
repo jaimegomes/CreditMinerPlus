@@ -1,4 +1,4 @@
-package br.com.mjsolutions.model;
+package br.com.mj.creditminerplus.model;
 
 import java.util.List;
 

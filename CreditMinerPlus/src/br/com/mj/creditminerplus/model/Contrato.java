@@ -1,4 +1,4 @@
-package br.com.mjsolutions.model;
+package br.com.mj.creditminerplus.model;
 
 import com.google.gson.annotations.SerializedName;
 

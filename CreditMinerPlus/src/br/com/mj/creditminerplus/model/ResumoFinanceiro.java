@@ -35,9 +35,6 @@ public class ResumoFinanceiro {
 	@SerializedName("CONTRATOS")
 	private List<Contrato> contratos;
 
-	@SerializedName("TIPO")
-	private String tipo;
-
 	public ResumoFinanceiro() {
 	}
 
@@ -55,7 +52,7 @@ public class ResumoFinanceiro {
 	 * @param tipo
 	 */
 	public ResumoFinanceiro(String dataCompetencia, String margemConsignavelEmp, String valorConsignadoEmp, String margemDisponivelEmp, String margemConsignavelRmc, String valorConsignadoRmc,
-			String margemDisponivelRmc, String qtdEmp, String qtdRmc, List<Contrato> contratos, String tipo) {
+			String margemDisponivelRmc, String qtdEmp, String qtdRmc, List<Contrato> contratos) {
 		this.dataCompetencia = dataCompetencia;
 		this.margemConsignavelEmp = margemConsignavelEmp;
 		this.valorConsignadoEmp = valorConsignadoEmp;
@@ -66,7 +63,6 @@ public class ResumoFinanceiro {
 		this.qtdEmp = qtdEmp;
 		this.qtdRmc = qtdRmc;
 		this.contratos = contratos;
-		this.tipo = tipo;
 	}
 
 	/**
@@ -219,19 +215,5 @@ public class ResumoFinanceiro {
 		this.contratos = contratos;
 	}
 
-	/**
-	 * @return the tipo
-	 */
-	public String getTipo() {
-		return tipo;
-	}
-
-	/**
-	 * @param tipo
-	 *            the tipo to set
-	 */
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
 
 }

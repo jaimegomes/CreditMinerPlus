@@ -11,19 +11,24 @@ import com.sun.jersey.api.client.WebResource;
 
 public class ClientWS {
 
-	public static  List<Cliente> getInformacoesClienteWS(String cpf) {
+	public static List<Cliente> getInformacoesClienteWS(String cpf) {
 
-		String urlws = "http://ws.consulta.plus/v2/govsc/cadastro/" + cpf + "?apiKey=XlYYdir53yerhDz5sgkgktyudgoLF4o7vde4";
+		try {
+			String urlws = "http://ws.consulta.plus/v2/govsc/cadastro/" + cpf + "?apiKey=XlYYdir53yerhDz5sgkgktyudgoLF4o7vde4";
 
-		Client c = Client.create();
-		WebResource wr = c.resource(urlws);
+			Client c = Client.create();
+			WebResource wr = c.resource(urlws);
 
-		String json = wr.get(String.class);
+			String json = wr.get(String.class);
 
-		Gson gson = new Gson();
+			Gson gson = new Gson();
 
-		return gson.fromJson(json, new TypeToken<List<Cliente>>() {
-		}.getType());
+			return gson.fromJson(json, new TypeToken<List<Cliente>>() {
+			}.getType());
+		} catch (Exception e) {
+			System.out.println("CPF: " + cpf + " " + e.getMessage());
+			return null;
+		}
 
 	}
 

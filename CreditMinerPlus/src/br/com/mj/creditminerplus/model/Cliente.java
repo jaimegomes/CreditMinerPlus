@@ -6,39 +6,42 @@ public class Cliente {
 
 	@SerializedName("MATRICULA")
 	private String matricula;
-	
+
 	@SerializedName("NOME")
 	private String nome;
-	
+
 	@SerializedName("CPF")
 	private String cpf;
-	
+
 	@SerializedName("DT_NASCIMENTO")
 	private String dataNascimento;
-	
+
 	@SerializedName("IDADE")
 	private String idade;
-	
+
 	@SerializedName("SEXO")
 	private String sexo;
-	
+
 	@SerializedName("ORGAO")
 	private String orgao;
-	
+
 	@SerializedName("CARGO")
 	private String cargo;
-	
+
 	@SerializedName("LOTACAO")
 	private String lotacao;
-	
+
 	@SerializedName("VALOR_SALARIO")
 	private String salario;
-	
+
 	@SerializedName("REGIME_JURIDICO")
 	private String regimeJuridico;
-	
+
 	@SerializedName("RESUMO_FINANCEIRO")
 	private ResumoFinanceiro resumoFinanceiro;
+
+	@SerializedName("TIPO")
+	private String tipo;
 
 	public Cliente() {
 	}
@@ -55,9 +58,10 @@ public class Cliente {
 	 * @param salario
 	 * @param regimeJuridico
 	 * @param resumoFinanceiro
+	 * @param tipo
 	 */
 	public Cliente(String matricula, String nome, String cpf, String dataNascimento, String idade, String sexo, String orgao, String cargo, String lotacao, String salario, String regimeJuridico,
-			ResumoFinanceiro resumoFinanceiro) {
+			ResumoFinanceiro resumoFinanceiro, String tipo) {
 		this.matricula = matricula;
 		this.nome = nome;
 		this.cpf = cpf;
@@ -70,6 +74,7 @@ public class Cliente {
 		this.salario = salario;
 		this.regimeJuridico = regimeJuridico;
 		this.resumoFinanceiro = resumoFinanceiro;
+		this.tipo = tipo;
 	}
 	/**
 	 * @return the matricula
@@ -226,6 +231,19 @@ public class Cliente {
 	 */
 	public void setResumoFinanceiro(ResumoFinanceiro resumoFinanceiro) {
 		this.resumoFinanceiro = resumoFinanceiro;
+	}
+	/**
+	 * @return the tipo
+	 */
+	public String getTipo() {
+		return tipo;
+	}
+	/**
+	 * @param tipo
+	 *            the tipo to set
+	 */
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
 }

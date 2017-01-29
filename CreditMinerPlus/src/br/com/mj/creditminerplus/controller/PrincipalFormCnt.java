@@ -115,7 +115,7 @@ public class PrincipalFormCnt {
 						contadorStatus++;
 
 						long end = System.currentTimeMillis();
-						long totalTempoCpf = Util.calculaTempoExecucao(start, end);
+						double totalTempoCpf = Util.calculaTempoExecucao(start, end);
 						principalView.getLblStatus().setText("Status: " + contadorStatus + "/" + total + " tempo processamento: " + totalTempoCpf / 1000 + "s");
 					}
 

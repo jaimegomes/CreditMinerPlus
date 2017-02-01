@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import br.com.mj.creditminerplus.client.ClientWS;
 import br.com.mj.creditminerplus.dto.ClienteDTO;
@@ -24,8 +26,10 @@ public class PrincipalFormCnt {
 	private File fileDestino;
 	private static Thread worker;
 	private int contadorStatus;
+	private static Logger log = Logger.getLogger("log");
 
 	public PrincipalFormCnt() {
+		PropertyConfigurator.configure("src/resources/log4j.properties");
 		principalView = new PrincipalView(this);
 		principalView.setVisible(true);
 	}
@@ -77,6 +81,7 @@ public class PrincipalFormCnt {
 				public void run() {
 
 					principalView.getLblStatus().setText("Iniciando captura de dados...");
+					log.info("Inciando captura de dados...");
 
 					List<ClienteDTO> listaClientesPreenchida = new ArrayList<ClienteDTO>();
 
@@ -89,23 +94,32 @@ public class PrincipalFormCnt {
 						List<Cliente> retornoJson = ClientWS.getInformacoesClienteWS(cpfFormatado);
 						Cliente cliente = null;
 
-						if ( retornoJson != null && !retornoJson.isEmpty() ) {
-							
+						if (retornoJson != null && !retornoJson.isEmpty()) {
+
 							cliente = retornoJson.get(0);
 
 							// para cada contrato ele cria um objeto ClienteDTO
-							// para
-							// preencher o csv com todos os contratos.
+							// para preencher o csv com todos os contratos.
 							for (Contrato con : cliente.getResumoFinanceiro().getContratos()) {
 
-								ClienteDTO clienteDTO = new ClienteDTO(cliente.getMatricula(), cliente.getNome(), cliente.getCpf(), cliente.getDataNascimento(), cliente.getIdade(), cliente.getSexo(),
-										cliente.getOrgao(), cliente.getCargo(), cliente.getLotacao(), cliente.getSalario(), cliente.getRegimeJuridico(), cliente.getResumoFinanceiro()
-												.getDataCompetencia(), cliente.getResumoFinanceiro().getMargemConsignavelEmp(), cliente.getResumoFinanceiro().getValorConsignadoEmp(), cliente
-												.getResumoFinanceiro().getMargemDisponivelEmp(), cliente.getResumoFinanceiro().getMargemConsignavelRmc(), cliente.getResumoFinanceiro()
-												.getValorConsignadoRmc(), cliente.getResumoFinanceiro().getMargemDisponivelRmc(), cliente.getResumoFinanceiro().getQtdEmp(), cliente
-												.getResumoFinanceiro().getQtdRmc(), cliente.getTipo(), con.getIdContratoEmp(), con.getDataInicioDesconto(), con.getDataFimDesconto(),
-										con.getIdBancoEmp(), con.getNomeBancoEmp(), con.getQtdParcelas(), con.getQtdParcelasRestante(), con.getValorQuitacao(), con.getValorRefinDisponivel(),
-										con.getValorRefinBruto(), con.getValorParcela(), con.getTipoEmp());
+								ClienteDTO clienteDTO = new ClienteDTO(cliente.getMatricula(), cliente.getNome(),
+										cliente.getCpf(), cliente.getDataNascimento(), cliente.getIdade(),
+										cliente.getSexo(), cliente.getOrgao(), cliente.getCargo(), cliente.getLotacao(),
+										cliente.getSalario(), cliente.getRegimeJuridico(),
+										cliente.getResumoFinanceiro().getDataCompetencia(),
+										cliente.getResumoFinanceiro().getMargemConsignavelEmp(),
+										cliente.getResumoFinanceiro().getValorConsignadoEmp(),
+										cliente.getResumoFinanceiro().getMargemDisponivelEmp(),
+										cliente.getResumoFinanceiro().getMargemConsignavelRmc(),
+										cliente.getResumoFinanceiro().getValorConsignadoRmc(),
+										cliente.getResumoFinanceiro().getMargemDisponivelRmc(),
+										cliente.getResumoFinanceiro().getQtdEmp(),
+										cliente.getResumoFinanceiro().getQtdRmc(), cliente.getTipo(),
+										con.getIdContratoEmp(), con.getDataInicioDesconto(), con.getDataFimDesconto(),
+										con.getIdBancoEmp(), con.getNomeBancoEmp(), con.getQtdParcelas(),
+										con.getQtdParcelasRestante(), con.getValorQuitacao(),
+										con.getValorRefinDisponivel(), con.getValorRefinBruto(), con.getValorParcela(),
+										con.getTipoEmp());
 
 								listaClientesPreenchida.add(clienteDTO);
 
@@ -116,7 +130,8 @@ public class PrincipalFormCnt {
 
 						long end = System.currentTimeMillis();
 						double totalTempoCpf = Util.calculaTempoExecucao(start, end);
-						principalView.getLblStatus().setText("Status: " + contadorStatus + "/" + total + " tempo processamento: " + totalTempoCpf / 1000 + "s");
+						principalView.getLblStatus().setText("Status: " + contadorStatus + "/" + total
+								+ " tempo processamento: " + totalTempoCpf / 1000 + "s");
 					}
 
 					// stop na thread
@@ -126,6 +141,8 @@ public class PrincipalFormCnt {
 					principalView.getLblNomeArquivoUpload().setText("");
 					principalView.getLblNomeDiretorioDestino().setText("");
 					principalView.getBtnIniciar().setEnabled(true);
+					
+					log.info("Arquivo processado com sucesso!");
 
 					WriteFileCSV.createCsvFile(listaClientesPreenchida, getFileDestino());
 				}
@@ -134,6 +151,7 @@ public class PrincipalFormCnt {
 			worker.start();
 
 		} catch (IOException e) {
+			log.error("Erro ao executar processo... " + e.getMessage());
 			e.printStackTrace();
 		}
 

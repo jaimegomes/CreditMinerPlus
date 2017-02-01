@@ -5,24 +5,31 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 import br.com.mj.creditminerplus.dto.ClienteDTO;
-import br.com.mj.creditminerplus.model.Cliente;
-import br.com.mj.creditminerplus.model.Contrato;
 
 /**
  * Classe que gera o csv com os dados processados
  * 
- * @author Marcelo Lopes Nunes</br> bjjsolutions.com.br - 30/06/2016</br> <a
- *         href=malito:lopesnunnes@gmail.com>lopesnunnes@gmail.com</a>
+ * @author Marcelo Lopes Nunes</br>
+ *         bjjsolutions.com.br - 30/06/2016</br>
+ *         <a href=malito:lopesnunnes@gmail.com>lopesnunnes@gmail.com</a>
  * 
  */
 public class WriteFileCSV {
 
 	private static final String COMMA_DELIMITER = ";";
 	private static final String NEW_LINE_SEPARATOR = "\n";
-	private static final String FILE_HEADER = "MATRICULA;NOME;CPF;DATA_NASCIMENTO;IDADE;SEXO;ORGAO;CARGO;LOTAÇÃO;VALOR_SALARIO;REGIME_JURIDICO;DATA_COMPETENCIA;MARGEM_CONSIGNAVEL_EMP;VALOR_CONSIGNADO_EMP;MARGEM_DISPONIVEL_EMP;MARGEM_CONSIGNAVEL_RMC;VALOR_CONSIGNADO_RMC;MARGEM_DISPONIVEL_RMC;QUANTIDADE_EMP;QUANTIDADE_RMC;ID_CONTRATO_EMP;DT_INI_DESCONTO;DT_FIM_DESCONTO;ID_BANCO_EMP;NOME_BANCO_EMP;QUANTIDADE_PARCELAS;QUANTIDADE_PARCELAS_REST;VALOR_QUITACAO;VALOR_REFIN_DISP;VALOR_REFIN_BRUTO;VALOR_PARCELA;TIPO_EMP;TIPO";
+	private static final String FILE_HEADER = "MATRICULA;NOME;CPF;DATA_NASCIMENTO;IDADE;SEXO;ORGÃO;CARGO;LOTAÇÃO;VALOR_SALÁRIO;REGIME_JURIDICO;DATA_COMPETÊNCIA;MARGEM_CONSIGNAVEL_EMP;VALOR_CONSIGNADO_EMP;MARGEM_DISPONIVEL_EMP;MARGEM_CONSIGNAVEL_RMC;VALOR_CONSIGNADO_RMC;MARGEM_DISPONIVEL_RMC;QUANTIDADE_EMP;QUANTIDADE_RMC;ID_CONTRATO_EMP;DT_INI_DESCONTO;DT_FIM_DESCONTO;ID_BANCO_EMP;NOME_BANCO_EMP;QUANTIDADE_PARCELAS;QUANTIDADE_PARCELAS_REST;VALOR_QUITAÇÃO;VALOR_REFIN_DISP;VALOR_REFIN_BRUTO;VALOR_PARCELA;TIPO_EMP;TIPO";
+	private static Logger log = Logger.getLogger("log");
 
 	public static void createCsvFile(List<ClienteDTO> clientesDTO, File destino) {
+
+		PropertyConfigurator.configure("src/resources/log4j.properties");
+
+		log.info("Gerando arquivo csv.");
 
 		FileWriter fileWriter = null;
 
@@ -38,10 +45,12 @@ public class WriteFileCSV {
 				writeLine(fileWriter, dto);
 			}
 
+			log.info("Arquivo CSV criado com sucesso");
 			System.out.println("Arquivo CSV criado com sucesso");
 
 		} catch (Exception e) {
 			System.err.println("Erro na criação do arquivo");
+			log.error("Erro na criação do arquivo");
 			e.printStackTrace();
 		} finally {
 			try {
@@ -49,6 +58,7 @@ public class WriteFileCSV {
 				fileWriter.close();
 			} catch (IOException e) {
 				System.err.println("Error while flushing/closing fileWriter !!!");
+				log.error("Error while flushing/closing fileWriter !!!");
 				e.printStackTrace();
 			}
 		}

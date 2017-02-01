@@ -43,7 +43,7 @@ public class ClientWS {
 
 		} catch (Exception e) {
 			
-			log.info("CPF: " + cpf + " " + e.getMessage());
+			log.error("CPF: " + cpf + " " + e.getMessage());
 			System.out.println("CPF: " + cpf + " " + e.getMessage());
 
 			if (e.getMessage().indexOf("Gateway") > 0) {

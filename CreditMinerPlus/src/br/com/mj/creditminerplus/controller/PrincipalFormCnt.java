@@ -76,6 +76,7 @@ public class PrincipalFormCnt {
 			final List<CsvDTO> list = Util.parseCsvFileToBeans(CsvDTO.class, getFileUpload());
 
 			final int total = list.size();
+			ClienteDTO clienteDTO = null;
 
 			worker = new Thread() {
 				public void run() {
@@ -84,6 +85,7 @@ public class PrincipalFormCnt {
 					log.info("Inciando captura de dados...");
 
 					List<ClienteDTO> listaClientesPreenchida = new ArrayList<ClienteDTO>();
+					ClienteDTO clienteDTO = null;
 
 					for (CsvDTO cpf : list) {
 
@@ -97,14 +99,15 @@ public class PrincipalFormCnt {
 						if (retornoJson != null && !retornoJson.isEmpty()) {
 
 							cliente = retornoJson.get(0);
+							List<Contrato> listContratos = cliente.getResumoFinanceiro().getContratos();
 
-							// para cada contrato ele cria um objeto ClienteDTO
-							// para preencher o csv com todos os contratos.
-							for (Contrato con : cliente.getResumoFinanceiro().getContratos()) {
+							// verifica se existe contrato, caso não exista ele
+							// cria um objeto somente com os dados existentes
+							if (listContratos == null || listContratos.isEmpty()) {
 
-								ClienteDTO clienteDTO = new ClienteDTO(cliente.getMatricula(), cliente.getNome(),
-										cliente.getCpf(), cliente.getDataNascimento(), cliente.getIdade(),
-										cliente.getSexo(), cliente.getOrgao(), cliente.getCargo(), cliente.getLotacao(),
+								clienteDTO = new ClienteDTO(cliente.getMatricula(), cliente.getNome(), cliente.getCpf(),
+										cliente.getDataNascimento(), cliente.getIdade(), cliente.getSexo(),
+										cliente.getOrgao(), cliente.getCargo(), cliente.getLotacao(),
 										cliente.getSalario(), cliente.getRegimeJuridico(),
 										cliente.getResumoFinanceiro().getDataCompetencia(),
 										cliente.getResumoFinanceiro().getMargemConsignavelEmp(),
@@ -114,16 +117,41 @@ public class PrincipalFormCnt {
 										cliente.getResumoFinanceiro().getValorConsignadoRmc(),
 										cliente.getResumoFinanceiro().getMargemDisponivelRmc(),
 										cliente.getResumoFinanceiro().getQtdEmp(),
-										cliente.getResumoFinanceiro().getQtdRmc(), cliente.getTipo(),
-										con.getIdContratoEmp(), con.getDataInicioDesconto(), con.getDataFimDesconto(),
-										con.getIdBancoEmp(), con.getNomeBancoEmp(), con.getQtdParcelas(),
-										con.getQtdParcelasRestante(), con.getValorQuitacao(),
-										con.getValorRefinDisponivel(), con.getValorRefinBruto(), con.getValorParcela(),
-										con.getTipoEmp());
+										cliente.getResumoFinanceiro().getQtdRmc(), cliente.getTipo(), null, null, null,
+										null, null, null, null, null, null, null, null, null);
 
 								listaClientesPreenchida.add(clienteDTO);
 
+							} else {
+
+								// caso exista contrato ele cria um objeto para
+								// cada contrato
+								for (Contrato con : cliente.getResumoFinanceiro().getContratos()) {
+
+									clienteDTO = new ClienteDTO(cliente.getMatricula(), cliente.getNome(),
+											cliente.getCpf(), cliente.getDataNascimento(), cliente.getIdade(),
+											cliente.getSexo(), cliente.getOrgao(), cliente.getCargo(),
+											cliente.getLotacao(), cliente.getSalario(), cliente.getRegimeJuridico(),
+											cliente.getResumoFinanceiro().getDataCompetencia(),
+											cliente.getResumoFinanceiro().getMargemConsignavelEmp(),
+											cliente.getResumoFinanceiro().getValorConsignadoEmp(),
+											cliente.getResumoFinanceiro().getMargemDisponivelEmp(),
+											cliente.getResumoFinanceiro().getMargemConsignavelRmc(),
+											cliente.getResumoFinanceiro().getValorConsignadoRmc(),
+											cliente.getResumoFinanceiro().getMargemDisponivelRmc(),
+											cliente.getResumoFinanceiro().getQtdEmp(),
+											cliente.getResumoFinanceiro().getQtdRmc(), cliente.getTipo(),
+											con.getIdContratoEmp(), con.getDataInicioDesconto(),
+											con.getDataFimDesconto(), con.getIdBancoEmp(), con.getNomeBancoEmp(),
+											con.getQtdParcelas(), con.getQtdParcelasRestante(), con.getValorQuitacao(),
+											con.getValorRefinDisponivel(), con.getValorRefinBruto(),
+											con.getValorParcela(), con.getTipoEmp());
+
+									listaClientesPreenchida.add(clienteDTO);
+
+								}
 							}
+
 						}
 
 						contadorStatus++;
@@ -141,7 +169,7 @@ public class PrincipalFormCnt {
 					principalView.getLblNomeArquivoUpload().setText("");
 					principalView.getLblNomeDiretorioDestino().setText("");
 					principalView.getBtnIniciar().setEnabled(true);
-					
+
 					log.info("Arquivo processado com sucesso!");
 
 					WriteFileCSV.createCsvFile(listaClientesPreenchida, getFileDestino());

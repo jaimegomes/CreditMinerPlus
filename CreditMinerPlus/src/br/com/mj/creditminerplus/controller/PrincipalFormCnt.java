@@ -76,7 +76,6 @@ public class PrincipalFormCnt {
 			final List<CsvDTO> list = Util.parseCsvFileToBeans(CsvDTO.class, getFileUpload());
 
 			final int total = list.size();
-			ClienteDTO clienteDTO = null;
 
 			worker = new Thread() {
 				public void run() {

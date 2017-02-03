@@ -131,11 +131,11 @@ public class WriteFileCSV {
 		fileWriter.append(COMMA_DELIMITER);
 		fileWriter.append(clienteDTO.getValorRefinBruto() != null ? clienteDTO.getValorRefinBruto() : "");
 		fileWriter.append(COMMA_DELIMITER);
-		fileWriter.append(clienteDTO.getValorParcela());
+		fileWriter.append(clienteDTO.getValorParcela() != null ? clienteDTO.getValorParcela() : "");
 		fileWriter.append(COMMA_DELIMITER);
-		fileWriter.append(clienteDTO.getTipoEmp());
+		fileWriter.append(clienteDTO.getTipoEmp() != null ? clienteDTO.getTipoEmp() : "");
 		fileWriter.append(COMMA_DELIMITER);
-		fileWriter.append(clienteDTO.getTipo());
+		fileWriter.append(clienteDTO.getTipo() != null ? clienteDTO.getTipo() : "");
 		fileWriter.append(NEW_LINE_SEPARATOR);
 
 	}
